@@ -1,0 +1,54 @@
+h1 {
+    color: #000080;
+}
+
+.sidebar-nav {
+    margin-top: 20px;
+    padding: 0;
+    list-style: none;
+}
+
+.navbar-custom {
+    color: #FFFFFF;
+    background-color: #000080;
+}
+
+/*fiddling with this to see if I could get checkboxes closer together*/
+/*.form-group {
+    margin:0px 0px;
+    padding:0px;
+}*/
+
+body {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+html, body {
+    padding-top: 5px;
+}
+
+/*select[multiple] {
+	width: 20em;
+}*/
+
+/* to put checkbox on left, before text */
+input[type="checkbox"] {
+    float: left;
+    margin-right: 10px;
+    margin-top: 4px;
+}
+
+
+/* for select2 plugin */
+/*body .select2-results__options--nested > li.select2-results__option {
+    display: none;
+}
+*/
+/*don't think this works. from https://stackoverflow.com/questions/19983601/prevent-select2-from-flipping-the-dropdown-upward*/
+/*.select-dropdown {
+  position: static;
+}
+.select-dropdown .select-dropdown--above {
+      margin-top: 336px;
+}*/

@@ -1,0 +1,53 @@
+{% extends "base_generic.html" %}
+{% load getdata_extras %}
+{% block content %}
+<h2>Selected Data</h2>
+
+<div class="container-fluid">
+<table class="table">
+
+<thead class="thead-inverse">
+<tr>
+<th>SNUM</th>
+{% for f in fields %}
+	<th>{{f}}</th>
+{% endfor %}
+{% for f in seq_names %}
+	<th>{{f}}_ok</th>
+{% endfor %}
+{% for f in fields_anat %}
+	<th>{{f}}</th>
+{% endfor %}
+{% for f in fields_freesurfer %}
+	<th>{{f}}</th>
+{% endfor %}
+{% for f in fields_funcROImean %}
+	<th>{{f}}</th>
+{% endfor %}
+</tr>
+</thead>
+
+{% for subj,vals_inc,vals_anat,vals_funcROImean,vals_freesurfer in subj_data_tuples %}
+<tr>
+<td>{{subj.snum}}</td>  
+	{% for f in fields %}
+		<td> {{ subj|getattribute:f }} </td>
+	{% endfor %}
+	{% for v in vals_inc %}
+		<td> {{ v.note }} </td>
+	{% endfor %}
+	{% for v in vals_anat %}
+		<td> {{ v.value }} </td>
+	{% endfor %}
+	{% for v in vals_freesurfer %}
+		<td> {{ v.value }} </td>
+	{% endfor %}	
+	{% for v in vals_funcROImean %}
+		<td> {{ v.value }} </td>
+	{% endfor %}	
+</tr>
+{% endfor %}
+
+</table>
+</div>
+{% endblock %}

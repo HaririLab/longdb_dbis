@@ -1,0 +1,106 @@
+{% extends "base_generic.html" %}
+{% load bootstrap %}
+
+{% block content %}
+<h2>Select data to pull from database</h2>
+<form action="" method="post">
+    {% csrf_token %}
+<br />
+<h4>Demographics:</h4>
+    {{ form|bootstrap }}
+<br />
+
+
+<span style="float:left; padding-right:25px;">
+<!-- <h4>Anat Variables:</h4>
+    {{ form_anat }}
+</span> -->
+  
+<!-- <h4>Func Variables:</h4>
+    {{ form_anat }} -->
+
+
+<div>	
+<h4>Anat Variables:</h4>
+	<div id="selectVar-container">
+	    <select class="selectVar" name="anat_selections"  multiple="multiple" style="width:350px">
+            {% for group,sublist in options_anat.items %}
+				<optgroup label="{{group}}"> <br>
+				{% for var in sublist %}
+					<option>{{var}}</option>
+				{% endfor %}	
+			{% endfor %}
+	     </select>     
+     </div>  
+</div>
+
+<div>	
+<h4>FreeSurfer Variables:</h4>
+	<div id="selectVar-container">
+	    <select class="selectVar" name="freesurfer_selections"  multiple="multiple" style="width:350px">
+            {% for group,sublist in options_freesurfer.items %}
+				<optgroup label="{{group}}"> <br>
+				{% for var in sublist %}
+					<option>{{var}}</option>
+				{% endfor %}	
+			{% endfor %}
+	     </select>     
+     </div>  
+</div>
+
+<div>	
+<h4>Task fMRI ROI mean Variables:</h4>
+	<div id="selectVar-container">
+	    <select class="selectVar" name="funcROImean_selections"  multiple="multiple" style="width:350px">
+            {% for group,sublist in options_funcROImean.items %}
+				<optgroup label="{{group}}"> <br>
+				{% for var in sublist %}
+					<option>{{var}}</option>
+				{% endfor %}	
+			{% endfor %}
+	     </select>     
+     </div>  
+</div>
+
+<h4>Image paths:</h4>
+	<div id="selectVar-container">
+	    <select class="selectVar" name="path_selections"  multiple="multiple" style="width:350px">
+            {% for group,sublist in options_path.items %}
+				<optgroup label="{{group}}"> <br>
+				{% for var in sublist %}
+					<option>{{var}}</option>
+				{% endfor %}	
+			{% endfor %}
+	     </select>     
+     </div>  
+</div>
+
+<br />
+<br />
+<br />
+    <input type="submit" name="action" value="Preview" /> <input type="submit" name="action" value="Write CSV" />
+
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+
+
+
+
+<br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+
+</form>
+
+
+
+  
+
+<br />
+<br />
+<br />
+{% endblock %}
