@@ -13,9 +13,11 @@
 	<th>{{f}}</th>
 {% endfor %}
 {% for f in seq_names %}
-	<th>{{f}}_ok</th>
+	<th>{{f}}_inclusive</th>
+	<th>{{f}}_strict</th>
+	<th>{{f}}_notes</th>
 {% endfor %}
-{% for f in fields_anat %}
+{% for f in fields_hcpmpp %}
 	<th>{{f}}</th>
 {% endfor %}
 {% for f in fields_freesurfer %}
@@ -27,16 +29,18 @@
 </tr>
 </thead>
 
-{% for subj,vals_inc,vals_anat,vals_funcROImean,vals_freesurfer in subj_data_tuples %}
+{% for subj,vals_inc,vals_hcpmpp,vals_funcROImean,vals_freesurfer in subj_data_tuples %}
 <tr>
 <td>{{subj.snum}}</td>  
 	{% for f in fields %}
 		<td> {{ subj|getattribute:f }} </td>
 	{% endfor %}
 	{% for v in vals_inc %}
+		<td> {{ v.inclusive }} </td>
+		<td> {{ v.strict }} </td>
 		<td> {{ v.note }} </td>
 	{% endfor %}
-	{% for v in vals_anat %}
+	{% for v in vals_hcpmpp %}
 		<td> {{ v.value }} </td>
 	{% endfor %}
 	{% for v in vals_freesurfer %}

@@ -21,21 +21,18 @@
 
 
 <div>	
-<h4>Anat Variables:</h4>
+<h4>HCPMPP Variables:</h4>
 	<div id="selectVar-container">
-	    <select class="selectVar" name="anat_selections"  multiple="multiple" style="width:350px">
-            {% for group,sublist in options_anat.items %}
-				<optgroup label="{{group}}"> <br>
-				{% for var in sublist %}
-					<option>{{var}}</option>
-				{% endfor %}	
+	    <select class="selectVar" name="hcpmpp_selections"  multiple="multiple" style="width:350px">
+            {% for vargroup in options_hcpmpp %}
+				<option>{{vargroup}}</option>
 			{% endfor %}
 	     </select>     
      </div>  
 </div>
 
 <div>	
-<h4>FreeSurfer Variables:</h4>
+<!-- <h4>FreeSurfer Variables:</h4>
 	<div id="selectVar-container">
 	    <select class="selectVar" name="freesurfer_selections"  multiple="multiple" style="width:350px">
             {% for group,sublist in options_freesurfer.items %}
@@ -73,7 +70,7 @@
 			{% endfor %}
 	     </select>     
      </div>  
-</div>
+</div> -->
 
 <br />
 <br />

@@ -1,4 +1,5 @@
 from django.shortcuts import render, render_to_response
+from django.db import models
 from django.views import generic
 from django.http import HttpResponseRedirect, HttpResponse
 from django.template import loader, Context
@@ -9,8 +10,8 @@ from functools import reduce
 from django.db.models import Q, Prefetch
 from getdata.more_functions import run_query, get_options
 
-from .models import Subject, AnatVariable, Sequence, Inclusion, FuncROImeanVariable, FreeSurferVariable, PathVariable
-from .forms import SelectionForm, SelectionForm_Anat
+from .models import Subject, HCPMPPVariable, Sequence, Inclusion, FuncROImeanVariable, FreeSurferVariable, PathVariable
+from .forms import SelectionForm
 
 def index(request):
     return HttpResponse("Hello, world. You're at the polls index.")
@@ -24,23 +25,24 @@ def index(request):
 def select(request):
 	if request.method == 'POST':
 		form = SelectionForm(request.POST)
-		# form_anat = SelectionForm_Anat(request.POST)
+		# form_hcpmpp = SelectionForm_hcpmpp(request.POST)
 
-		if form.is_valid(): # and form_anat.is_valid():
+		if form.is_valid(): 
 			fields=[]
 			if form.cleaned_data['useGender']:
 				fields.append('gender')
 			if form.cleaned_data['useDOB']:
 				fields.append('dob')
 			
-			subjects = Subject.objects.all().order_by('snum') #[0:10]	########## i guess i get rid of this and just prefetch from each table with the same base query?!?!? wait actually i need subjects to prepopulate blank array; maybe i can make it a queryset or something that i use for each of the following
+			#filter(snum__startswith=("0","1")
+			subjects = Subject.objects.filter(retest="no").order_by('snum') #[0:10]	########## i guess i get rid of this and just prefetch from each table with the same base query?!?!? wait actually i need subjects to prepopulate blank array; maybe i can make it a queryset or something that i use for each of the following
 
-			fields_anat,vals_anat,seqs_anat=run_query(request.POST.getlist('anat_selections'),"anat",subjects)
+			fields_hcpmpp,vals_hcpmpp,seqs_hcpmpp=run_query(request.POST.getlist('hcpmpp_selections'),"hcpmpp",subjects)
 			fields_funcROImean,vals_funcROImean,seqs_funcROImean=run_query(request.POST.getlist('funcROImean_selections'),"funcroimean",subjects)
 			fields_freesurfer,vals_freesurfer,seqs_freesurfer=run_query(request.POST.getlist('freesurfer_selections'),"freesurfer",subjects)
 			
 			# get the relevant inclusion notes 
-			sequences=seqs_anat+seqs_funcROImean+seqs_freesurfer 
+			sequences=seqs_hcpmpp+seqs_funcROImean+seqs_freesurfer 
 			seq_names=[]
 			if(len(sequences)>0):
 				sequences=set(sequences) # pare down to just unique values
@@ -64,14 +66,14 @@ def select(request):
 
 
 
-			subj_data_tuples=list(zip(subjects,vals_inc,vals_anat,vals_funcROImean, vals_freesurfer))
+			subj_data_tuples=list(zip(subjects,vals_inc,vals_hcpmpp,vals_funcROImean, vals_freesurfer))
 
 			if request.POST['action'] == 'Preview':
 				#### need to do a bit more research to enable adding the "write csv" button to preview page
 				# request.session['context_data'] = {'fields':fields,'fields_day1':fields_day1,'fields_bat':fields_bat,'fields_anat':fields_anat,'fields_snp':fields_snp,'subj_data_tuples':subj_data_tuples}
 				# print(request.session['context_data'])
 				# print('****0******')
-				return render(request, 'selected_data.html',{'fields':fields,'seq_names':seq_names,'fields_anat':fields_anat,'fields_funcROImean':fields_funcROImean,'fields_freesurfer':fields_freesurfer,'subj_data_tuples':subj_data_tuples})
+				return render(request, 'selected_data.html',{'fields':fields,'seq_names':seq_names,'fields_hcpmpp':fields_hcpmpp,'fields_funcROImean':fields_funcROImean,'fields_freesurfer':fields_freesurfer,'subj_data_tuples':subj_data_tuples})
 			else:
 				# try:	
 				# 	print('********1*********')
@@ -86,7 +88,7 @@ def select(request):
 				response['Content-Disposition'] = 'attachment; filename="ExtractedData.csv"'
 				t = loader.get_template('write_csv_template.py')
 				# response.write(t.render({'fields':fields,'fields_day1':fields_day1,'fields_bat':fields_bat,'fields_anat':fields_anat,'fields_snp':fields_snp,'subj_data_tuples':subj_data_tuples}))
-				response.write(t.render({'fields':fields,'fields_anat':fields_anat,'fields_funcROImean':fields_funcROImean,'fields_freesurfer':fields_freesurfer,'subj_data_tuples':subj_data_tuples}))
+				response.write(t.render({'fields':fields,'seq_names':seq_names,'fields_hcpmpp':fields_hcpmpp,'fields_funcROImean':fields_funcROImean,'fields_freesurfer':fields_freesurfer,'subj_data_tuples':subj_data_tuples}))
 				return response
 
 		else:
@@ -135,17 +137,13 @@ def select(request):
 				options[vargroup].append(var)
 		options_path=options
 
-		options_anat={}				
-		for fullvar in AnatVariable.objects.all():
-			var=fullvar.var_name.split('_',1)[0] 
-			vargroup=fullvar.vargroup
-			if vargroup not in options_anat:
-				options_anat[vargroup]=[]
-			if var not in options_anat[vargroup]:
-				options_anat[vargroup].append(var)
+		vargroups=HCPMPPVariable.objects.all().values("vargroup").annotate(n=models.Count("pk"))#[0]['vargroup'] # get unique values of vargroup
+		options_hcpmpp=[]
+		for vargroup in vargroups:
+			options_hcpmpp.append(vargroup['vargroup'])
 
 		form = SelectionForm()
 
-	return render(request, 'select.html',{'form':form,'options_anat':options_anat,'options_funcROImean':options_funcROImean,'options_freesurfer':options_freesurfer,'options_path':options_path})
+	return render(request, 'select.html',{'form':form,'options_hcpmpp':options_hcpmpp,'options_funcROImean':options_funcROImean,'options_freesurfer':options_freesurfer,'options_path':options_path})
 
 

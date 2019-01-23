@@ -1,27 +1,34 @@
-from .models import AnatVariable, FuncROImeanVariable, FreeSurferVariable, AnatValue, FuncROImeanValue, FreeSurferValue
+from .models import HCPMPPVariable, FuncROImeanVariable, FreeSurferVariable, HCPMPPValue, FuncROImeanValue, FreeSurferValue
 from django.db.models import Q, Prefetch
 from functools import reduce
 
+
 def get_subvars(var,var_type):
-	if var_type == "anat":
-		allvars=AnatVariable.objects.all()
+	if var_type == "hcpmpp":
+		allvars=HCPMPPVariable.objects.all().order_by('roi_index')
+		use_group="yes"
 	elif var_type == "funcroimean":
 		allvars=FuncROImeanVariable.objects.all()
+		use_group="no"
 	elif var_type == "freesurfer":
 		allvars=FreeSurferVariable.objects.all()
+		use_group="no"
 	else:
 		print("Invalid var_type: "+var_type)
 		return
-	varlist=[]
-	for v in allvars:
-		if v.var_name.startswith(var):
-			varlist.append(v.var_name)
+	if use_group == "yes":
+		varlist=list(allvars.filter(vargroup=var).values_list('var_name',flat=True)) # might want to put order_by(index) here??
+	else:	
+		varlist=[]
+		for v in allvars:
+			if v.var_name.startswith(var):
+				varlist.append(v.var_name)
 	return varlist	
 
 def run_query(requested_vars,var_type,subjects):
-	if var_type == "anat":
-		allvars=AnatVariable.objects
-		allvals=AnatValue.objects
+	if var_type == "hcpmpp":
+		allvars=HCPMPPVariable.objects
+		allvals=HCPMPPValue.objects
 	elif var_type == "funcroimean":
 		allvars=FuncROImeanVariable.objects
 		allvals=FuncROImeanValue.objects
@@ -36,7 +43,9 @@ def run_query(requested_vars,var_type,subjects):
 	fields_out=[]
 	sequences=[]
 	for requested_var in requested_vars:
+		#print("reqvar"+requested_var)
 		for subvar in get_subvars(requested_var,var_type):
+			#print("subvar"+subvar)
 			vars_out.append(allvars.get(var_name=subvar))  
 			fields_out.append(subvar)
 			sequences.append(allvars.get(var_name=subvar).sequence) #.seq_name
