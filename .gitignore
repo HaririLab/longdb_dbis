@@ -6,7 +6,6 @@ djangodev
 db.sqlite3
 .DS_Store
 longdb_dbis/settings_secret.py
-importing_data_scratch.py
 migrations/
 .htaccess
 getdata/static/css/autocomplete.css
