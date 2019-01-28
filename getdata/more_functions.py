@@ -1,4 +1,4 @@
-from .models import HCPMPPVariable, FuncROImeanVariable, FreeSurferVariable, HCPMPPValue, FuncROImeanValue, FreeSurferValue
+from .models import HCPMPPVariable, HCPMPPValue #, FuncROImeanVariable, FreeSurferVariable, FuncROImeanValue, FreeSurferValue
 from django.db.models import Q, Prefetch
 from functools import reduce
 
@@ -7,12 +7,12 @@ def get_subvars(var,var_type):
 	if var_type == "hcpmpp":
 		allvars=HCPMPPVariable.objects.all().order_by('roi_index')
 		use_group="yes"
-	elif var_type == "funcroimean":
-		allvars=FuncROImeanVariable.objects.all()
-		use_group="no"
-	elif var_type == "freesurfer":
-		allvars=FreeSurferVariable.objects.all()
-		use_group="no"
+	# elif var_type == "funcroimean":
+	# 	allvars=FuncROImeanVariable.objects.all()
+	# 	use_group="no"
+	# elif var_type == "freesurfer":
+	# 	allvars=FreeSurferVariable.objects.all()
+	# 	use_group="no"
 	else:
 		print("Invalid var_type: "+var_type)
 		return
@@ -29,12 +29,12 @@ def run_query(requested_vars,var_type,subjects):
 	if var_type == "hcpmpp":
 		allvars=HCPMPPVariable.objects
 		allvals=HCPMPPValue.objects
-	elif var_type == "funcroimean":
-		allvars=FuncROImeanVariable.objects
-		allvals=FuncROImeanValue.objects
-	elif var_type == "freesurfer":
-		allvars=FreeSurferVariable.objects
-		allvals=FreeSurferValue.objects
+	# elif var_type == "funcroimean":
+	# 	allvars=FuncROImeanVariable.objects
+	# 	allvals=FuncROImeanValue.objects
+	# elif var_type == "freesurfer":
+	# 	allvars=FreeSurferVariable.objects
+	# 	allvals=FreeSurferValue.objects
 	else:
 		print("Invalid var_type: "+var_type)
 		return	

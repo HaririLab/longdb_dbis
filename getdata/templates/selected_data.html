@@ -20,16 +20,10 @@
 {% for f in fields_hcpmpp %}
 	<th>{{f}}</th>
 {% endfor %}
-{% for f in fields_freesurfer %}
-	<th>{{f}}</th>
-{% endfor %}
-{% for f in fields_funcROImean %}
-	<th>{{f}}</th>
-{% endfor %}
 </tr>
 </thead>
 
-{% for subj,vals_inc,vals_hcpmpp,vals_funcROImean,vals_freesurfer in subj_data_tuples %}
+{% for subj,vals_inc,vals_hcpmpp in subj_data_tuples %}
 <tr>
 <td>{{subj.snum}}</td>  
 	{% for f in fields %}
@@ -41,12 +35,6 @@
 		<td> {{ v.note }} </td>
 	{% endfor %}
 	{% for v in vals_hcpmpp %}
-		<td> {{ v.value }} </td>
-	{% endfor %}
-	{% for v in vals_freesurfer %}
-		<td> {{ v.value }} </td>
-	{% endfor %}	
-	{% for v in vals_funcROImean %}
 		<td> {{ v.value }} </td>
 	{% endfor %}	
 </tr>
