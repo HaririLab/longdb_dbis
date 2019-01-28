@@ -21,7 +21,7 @@ def index(request):
 # 	# return render(request, "home.html", {'subjects': Subject.objects.all()})
 # 	return render(request, "home.html")
 
-@login_required(login_url="/login/")
+@login_required(login_url="/longdb_dbis/login/")
 def select(request):
 	if request.method == 'POST':
 		form = SelectionForm(request.POST)
