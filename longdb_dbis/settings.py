@@ -24,7 +24,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECRET_KEY = '********'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True #in settings_secret.py
 
 ALLOWED_HOSTS = ['152.3.43.224','152.3.88.208','127.0.0.1','10.191.27.255','www.haririlab.com', 'haririlab.com']
 
@@ -58,7 +58,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'longdb_dbis.urls'
+#ROOT_URLCONF = 'longdb_dbis.urls' #in settings_secret.py
 
 TEMPLATES = [
     {
@@ -142,5 +142,5 @@ IPRESTRICT_GEOIP_ENABLED = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
-STATIC_URL = '/static/'
+# STATIC_URL = '/static/' #in settings_secret.py
 LOGIN_REDIRECT_URL = '/'
