@@ -1,3 +1,5 @@
+basedir='/home6/haririla/public_html/longdb_dbis'
+
 ## run these from within a django shell:
 ## python3 manage.py shell	 (and then paste in), or:
 ## python3 manage.py shell < importing_data_scratch.py	
@@ -94,19 +96,19 @@
 # 					break
 
 
-# ### Inclusion data
-# ## second round, with HCP
-# import csv
-# from getdata.models import Subject, Sequence, Inclusion
-# r,c=Sequence.objects.get_or_create(seq_name="HCPMPP")
-# with open('/Users/Annchen/DjangoProjects/longdb_dbis/DataToIncorporate/LOG_master_inclusion_list_HCP.csv',newline='') as f:
-# 	reader=csv.reader(f)
-# 	row1=next(reader)
-# 	for row in reader:
-# 		# print(row)
-# 		s,c=Subject.objects.get_or_create(snum=row[0].replace("DMHDS",""))
-# 		### assuming all fields are non-empty - check before importing!!!!!
-# 		g=Inclusion.objects.create(subject=s,sequence=r,inclusive=row[4],strict=row[5],note=row[6])			
+### Inclusion data
+## second round, with HCP
+#import csv
+#from getdata.models import Subject, Sequence, Inclusion
+#r,c=Sequence.objects.get_or_create(seq_name="HCPMPP")
+#with open(basedir+'/DataToIncorporate/LOG_master_inclusion_list.csv',newline='') as f:
+#	reader=csv.reader(f)
+#	row1=next(reader)
+#	for row in reader:
+#		# print(row)
+#		s,c=Subject.objects.get_or_create(snum=row[0].replace("DMHDS",""))
+#		### assuming all fields are non-empty - check before importing!!!!!
+#		g=Inclusion.objects.create(subject=s,sequence=r,inclusive=row[4],strict=row[5],note=row[6])			
 ## first round
 # import datetime, csv
 # # from getdata.models import Subject, Sequence, Inclusion
@@ -133,22 +135,36 @@
 # 			else:
 # 				g=Inclusion.objects.create(subject=s,sequence=r,note=None)		
 
-# imaging data - HCPMPP
+### demo data
 import csv
-from getdata.models import Subject, HCPMPPVariable, HCPMPPValue, Sequence
-seq,c=Sequence.objects.get_or_create(seq_name="HCPMPP")
-with open('/Users/Annchen/DjangoProjects/longdb_dbis/DataToIncorporate/SA_HCPMPP.csv',newline='') as f:
+from getdata.models import Subject
+with open(basedir+'/DataToIncorporate/ImagingBaseFile_forDB.csv',newline='') as f:
 	reader=csv.reader(f)
 	row1=next(reader)
 	for row in reader:
-		print(row[0])
-		s,c=Subject.objects.get_or_create(snum=row[1].replace("sub-",""))
-		for i in range(2,len(row1)):
-			r,c=HCPMPPVariable.objects.get_or_create(var_name="HCPMPP_"+row1[i],roi_index=i-2,sequence=seq,vargroup="HCPMPP_SurfaceArea")
-			if(row[i]):
-				g=HCPMPPValue.objects.create(subject=s,variable=r,value=row[i])			
-			else:
-				g=HCPMPPValue.objects.create(subject=s,variable=r,value=None)	
+		try:
+			s=Subject.objects.get(snum=row[0].replace("sub-",""))
+			s.gender=row[1]
+			s.save()
+		except:
+			print("no subject: "+row[0])
+
+### imaging data - HCPMPP
+#import csv
+#from getdata.models import Subject, HCPMPPVariable, HCPMPPValue, Sequence
+#seq,c=Sequence.objects.get_or_create(seq_name="HCPMPP")
+#with open(basedir+'/DataToIncorporate/corrCT_HCPMPP.csv',newline='') as f:
+#	reader=csv.reader(f)
+#	row1=next(reader)
+#	for row in reader:
+#		print(row[0])
+#		s,c=Subject.objects.get_or_create(snum=row[1].replace("sub-",""))
+#		for i in range(2,len(row1)):
+#			r,c=HCPMPPVariable.objects.get_or_create(var_name="HCPMPP_Glasser_"+row1[i],roi_index=i-2,sequence=seq,vargroup="HCPMPP_Glasser_CorticalThickness")
+#			if(row[i]):
+#				g=HCPMPPValue.objects.create(subject=s,variable=r,value=row[i])			
+#			else:
+#				g=HCPMPPValue.objects.create(subject=s,variable=r,value=None)	
 
 # # fill in "sequence" values
 # from getdata.models import Sequence, AnatVariable
